@@ -3,7 +3,7 @@ from .forms import RegistrationForm, LoginForm, PostForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Post
-
+from django.contrib.auth.models import Group
 
 def home(request):
     posts = Post.objects.all() # Take all data from Post model and give this data to post
@@ -18,7 +18,10 @@ def contact(request):
 def dashboard(request):
     if request.user.is_authenticated:
         posts = Post.objects.all()
-        return render(request, 'blog/dashboard.html',{'posts' : posts})
+        user = request.user
+        full_name = user.get_full_name()
+        gps = user.groups.all()
+        return render(request, 'blog/dashboard.html',{'posts' : posts, 'full_name' : full_name,'groups' : gps})
     else:
         return HttpResponseRedirect('/login/')
 
@@ -31,7 +34,9 @@ def user_register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             messages.success(request, 'Congratulations! You successfully logged in.')
-            form.save()
+            user = form.save()
+            group = Group.objects.get(name='Author')
+            user.groups.add(group)
     else:
         form = RegistrationForm()
     return render(request, 'blog/register.html', {'form' : form})
