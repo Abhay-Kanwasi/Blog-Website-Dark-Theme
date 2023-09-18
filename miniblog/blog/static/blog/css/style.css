@@ -1,0 +1,19 @@
+body {
+    background-color: rgb(75, 74, 74);
+    color:antiquewhite;
+    margin: 0;
+    padding: 0;
+}
+
+.form-control{
+    background-color: rgb(177, 168, 168);
+}
+
+.form-class{
+    width: 30%; 
+}
+
+.py {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}

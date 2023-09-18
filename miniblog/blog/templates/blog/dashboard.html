@@ -1,0 +1,54 @@
+{% extends 'blog/base.html' %}
+
+{% load static %}
+
+{% block message %}
+    {% if messages %}
+    {% for message in messages %}
+    <div {% if message.tags %} class="alert alert-{{message.tags}} alert-dismissible fade show" {% endif %}><strong>{{message}}</strong></div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+{% endblock message %}
+
+{% block content %}
+<div class="col-sm-10">
+    <h3 class="text-white my-5 mb-2">Dashboard Page</h3><hr>
+    
+    <a href="{% url 'add_post' %} " class="btn btn-success btn-lg">Add Post</a>
+    <h4 class="text-center alert alert-info mt-3">Show Post Information</h4>
+    {% if posts %}
+    <table class="table table-hover bg-white">
+        <thead>
+            <tr class="text-center">
+                <th scope="col" style="width:2%">ID</th>
+                <th scope="col" style="width:2%">Title</th>
+                <th scope="col" style="width:2%">Description</th>
+                <th scope="col" style="width:2%">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr class="text-center">
+                <th scope="row">{{post.id}}</th>
+                <th scope="row">{{post.title}}</th>
+                <th scope="row">{{post.description}}</th>
+                <td>
+                    <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Edit</a>
+                    <form action="{% url 'delete_post' post.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-danger" value="Delete">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h4 class="text-center alert alert-warning">No Records</h4>
+    {% endif %}
+</div>
+{% endblock content %}
